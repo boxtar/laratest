@@ -53,7 +53,8 @@ class PostsController extends Controller
     public function create($user)
     {
         // Clean up the URL before letting Authenticated User Post
-        if(!$this->is_user_owner($user))
+        // $this->authorize('create', $user) not working!
+        if(!policy(Post::class)->create(Auth::user(), $user))
             return redirect('users/'.Auth::user()->profile_link.'/posts/create');
 
         return view(Config::get('boxtar.createPost'), compact('user'));
@@ -95,9 +96,8 @@ class PostsController extends Controller
      */
     public function edit(User $user, Post $post)
     {
-        // Clean up the URL before letting Authenticated User Edit Post
-        if(!$this->is_user_owner($user) || $user->id != $post->owner_id)
-            return redirect('users/'.$user->profile_link);
+        // Ensure authenticated user is authorized to perform this action
+        $this->authorize('update', $post);
 
         return view(Config::get('boxtar.editPost'), compact("user", "post"));
     }
