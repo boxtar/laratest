@@ -49,9 +49,7 @@ class UsersController extends Controller
 	 * @return \Illuminate\View\View
 	 */
 	public function edit($user) {
-		if($this->checkAuthenticity($user))
-			return redirect('users/'.Auth::user()->profile_link.'/edit');
-
+		$this->authorize('edit', $user);
 		return view(Config::get('boxtar.editUser'), compact('user'));
 	}
 
@@ -66,16 +64,5 @@ class UsersController extends Controller
 		flash()->success('Profile Updated');
 
 		return redirect('users/'.$request->input('profile_link'));
-	}
-
-	/**
-	 * Ensure the Authenticated User is the User being viewed
-	 * Stops unauthorised editing of other Users
-	 *
-	 * @param $user
-	 * @return bool
-     */
-	private function checkAuthenticity($user){
-		return (Auth::user()->id != $user->id);
 	}
 }
