@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: johnpaul
- * Date: 29/10/2015
- * Time: 18:46
- */
-
-namespace App\Boxtar\Repositories\Contracts;
-
+namespace App\Repositories\Contracts;
 
 interface Repository
 {
