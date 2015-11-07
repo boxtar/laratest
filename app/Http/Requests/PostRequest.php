@@ -34,7 +34,6 @@ class PostRequest extends Request
                 return true;
             }
         }
-
         return false;
     }
 
