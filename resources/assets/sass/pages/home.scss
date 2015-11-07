@@ -1,0 +1,16 @@
+
+$primary-text-color: #2f2f2f;
+$primary-background-color: #E5E5E5;
+
+.title {
+  text-align: center;
+  font-size: 96px;
+  font-weight: 100;
+  color: $primary-text-color;
+}
+.small-container{
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 10px 5px;
+}
