@@ -36,12 +36,7 @@ class PostsController extends Controller
         // route model binding makes this possible (see App\Providers\RouteServiceProvider)
 		$posts	= $user->posts;
 
-        // is the user viewing their own posts?
-        // this gets used in the view to decide whether to create edit link or not
-        // TODO: Don't need this. Can check if user is authenticated user in view.
-        $viewer_is_owner = $this->is_user_owner($user);
-
-		return view(Config::get('boxtar.viewPosts'), compact("user", "posts", "viewer_is_owner"));
+		return view(Config::get('boxtar.viewPosts'), compact("user", "posts"));
     }
 
     /**
@@ -52,9 +47,8 @@ class PostsController extends Controller
      */
     public function create($user)
     {
-        // Clean up the URL before letting Authenticated User Post
-        // $this->authorize('create', $user) not working!
-        if(!policy(Post::class)->create(Auth::user(), $user))
+         // Clean up the URL before letting Authenticated User Post
+        if(Auth::id() != $user->id)
             return redirect('users/'.Auth::user()->profile_link.'/posts/create');
 
         return view(Config::get('boxtar.createPost'), compact('user'));
@@ -97,7 +91,7 @@ class PostsController extends Controller
     public function edit(User $user, Post $post)
     {
         // Ensure authenticated user is authorized to perform this action
-        $this->authorize('update', $post);
+        $this->authorize('updatePost', $post);
 
         return view(Config::get('boxtar.editPost'), compact("user", "post"));
     }

@@ -13,15 +13,15 @@
 		@foreach($posts as $post)
 			<article>
 				<h4>
-					@if($viewer_is_owner)
+					@can('updatePost', $post)
 						<a href="{{ action('PostsController@edit', [$user->profile_link, $post->id]) }}">
-					@endif
+					@endcan
 
 					{!! $post->message !!}
 
-					@if($viewer_is_owner)
+                    @can('update', $post)
 						</a>
-					@endif
+					@endcan
 
 				</h4>
 			</article>
@@ -30,23 +30,23 @@
 	@else
 		<article>
 			<h4>
-				@if($viewer_is_owner)
+				@can('createPost', $user)
 					You have no posts yet. Get cracking!
 				@else
 					{!! $user->name !!} has no posts yet.
-				@endif
+				@endcan
 			</h4>
 		</article>
 	@endif
 
 	<br/>
 
-	@if($viewer_is_owner)
+	@can('createPost', $user)
 		<p>
 			<a class="btn btn-default" href="{{ action('PostsController@create', $user->profile_link) }}">
 				New Post
 			</a>
 		</p>
-	@endif
+	@endcan
 </div>
 @stop
