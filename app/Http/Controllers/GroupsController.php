@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Repositories\Contracts\Repository;
 use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
 use App\Http\Controllers\Controller;
@@ -104,7 +105,6 @@ class GroupsController extends Controller
 		// Remove any user provided owner_id field
 		$request = $request->except('owner_id');
 		// Implant owner_id field with value of currently authenticated user
-//		$request->merge(['owner_id' => Auth::id()]);
 		$request['owner_id'] = Auth::id();
 		return $request;
 	}

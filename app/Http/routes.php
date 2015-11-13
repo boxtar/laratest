@@ -1,7 +1,18 @@
 <?php
+
+// REPO TEST
+/*Route::get('foo', function(\App\Repositories\Eloquent\UserRepository $repo){
+    dd($repo->all());
+});*/
+
 Route::resource('users', 'UsersController');
+Route::get('users/{users}/groups', 'GroupsController@getGroups');
+
 Route::resource('groups', 'GroupsController');
+Route::get('groups/{groups}/users', 'UsersController@getUsers');
+
 Route::resource('users/{users}/posts', 'PostsController');
+
 Route::controllers([
 	'auth'		=> 'Auth\AuthController',
 	'password'	=> 'Auth\PasswordController'
@@ -10,9 +21,6 @@ Route::controllers([
 Route::get('admin', ['middleware' => ['auth','admin'], function(){
 	return 'Admin Panel';
 }]);
-
-Route::get('users/{users}/groups', 'GroupsController@getGroups');
-Route::get('groups/{groups}/users', 'UsersController@getUsers');
 
 /*
  |--------------------------------------------------
