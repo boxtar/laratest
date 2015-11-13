@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -21,7 +22,10 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesAndRegistersUsers{
+        postLogin as traitPostLogin;
+    }
+    use ThrottlesLogins;
 
 	// redirect path post registration
 	protected $redirectTo = '/users';
@@ -32,7 +36,6 @@ class AuthController extends Controller
     /**
      * Create a new authentication controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -69,5 +72,19 @@ class AuthController extends Controller
             'password' => $data['password'],
 			'profile_link' => $data['profile_link'],
         ]);
+    }
+
+    public function postLogin(Request $request)
+    {
+        // Users input (profile link or email address)
+        $user_input = $request->input($this->username);
+        // Did user attempted login with email address or profile link
+        $username = ( filter_var($user_input, FILTER_VALIDATE_EMAIL) ) ? 'email' : 'profile_link';
+        // Merge the Database key into the request
+        $request->merge([$username => $user_input]);
+        // Change the class' username field to the Database Key
+        $this->username = $username;
+        // Pass request off to Trait Function
+        return $this->traitPostLogin($request);
     }
 }
