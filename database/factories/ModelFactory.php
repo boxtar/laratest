@@ -22,8 +22,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Post::class, function (Faker\Generator $faker) {
+    $user = \App\User::all()->random();
     return [
-        'owner_id' => factory(App\User::class)->create(),
+        'owner_id' => $user->id,
         'message' => $faker->paragraph(),
     ];
 });
