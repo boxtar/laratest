@@ -28,3 +28,19 @@ $factory->define(App\Post::class, function (Faker\Generator $faker) {
         'message' => $faker->paragraph(),
     ];
 });
+
+$factory->define(App\Group::class, function (Faker\Generator $faker) {
+    $user = \App\User::all()->random();
+    return [
+        'owner_id' => $user->id,
+        'name' => $faker->domainName,
+        'profile_link' => str_random(16),
+        'type' => $faker->numberBetween(1,3)
+    ];
+});
+
+$factory->define(App\Tag::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->randomElement(['PHP', 'C', 'C++', 'JS', 'Other'])
+    ];
+});
