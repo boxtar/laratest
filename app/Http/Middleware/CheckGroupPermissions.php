@@ -21,7 +21,7 @@ class CheckGroupPermissions
         $user = Auth::user();
         if($user->id != $group->owner->id){
             flash()->error('Unauthorised Request');
-            return redirect()->action('UsersController@show', [$user->profile_link]);
+            return redirect()->back();//->action('UsersController@show', [$user->profile_link]);
         }
 
         return $next($request);

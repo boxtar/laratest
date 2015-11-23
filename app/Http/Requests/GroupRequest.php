@@ -26,7 +26,7 @@ class GroupRequest extends Request
         $rules = [
             'name'          => 'required|min:2|max:30',
             'profile_link'  => 'required|unique:groups|min:4|max:30',
-            'type'          => 'required|min:1|max:3',
+            'group_type_id' => 'required|min:1|max:3',
         ];
 
         if($this->isMethod('patch'))

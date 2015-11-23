@@ -19,7 +19,7 @@
 
 					{!! $post->message !!}
 
-                    @can('update', $post)
+                    @can('updatePost', $post)
 						</a>
 					@endcan
 

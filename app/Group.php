@@ -18,19 +18,20 @@ class Group extends Model
      *
      * @var array
      */
-	protected $fillable = ['owner_id', 'name', 'profile_link', 'type'];
-
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-	public function owner(){
-		return $this->belongsTo('App\User');
-	}
+	protected $fillable = ['name', 'profile_link', 'avatar', 'group_type_id'];
 
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
 	public function members(){
-		return $this->belongsToMany('App\User')->withPivot('permissions')->withTimestamps();
+		return $this->belongsToMany('App\User')->withPivot('role_id')->withTimestamps();
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+	public function type()
+	{
+		return $this->belongsTo(GroupType::class, 'group_type_id');
 	}
 }

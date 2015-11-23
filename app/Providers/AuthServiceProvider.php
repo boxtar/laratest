@@ -13,9 +13,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
-        'App\User'  => 'App\Policies\UserPolicy',
-        'App\Post'  => 'App\Policies\PostPolicy',
+        \App\Model::class => 'App\Policies\ModelPolicy',
+        \App\User::class  => 'App\Policies\UserPolicy',
+        \App\Post::class  => 'App\Policies\PostPolicy',
     ];
 
     /**
@@ -28,6 +28,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         parent::registerPolicies($gate);
 
-        //
+        foreach($this->getGroupPermissions() as $permission){
+            $gate->define($permission->name, function(\App\User $user, \App\Group $group) use($permission){
+                return $user->hasGroupRole($permission->roles, $group);
+            });
+        }
+    }
+
+    protected function getGroupPermissions()
+    {
+        return \App\GroupPermission::with('roles')->get();
     }
 }

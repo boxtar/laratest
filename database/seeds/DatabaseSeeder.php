@@ -20,24 +20,13 @@ class DatabaseSeeder extends Seeder
 
         DB::statement("SET foreign_key_checks = 0");
 
-        User::truncate();
-
-        Tag::truncate();
-
-        Post::truncate();
-
-        Group::truncate();
-
-        // $this->call(UserTableSeeder::class);
-
-        $users = factory(User::class, 10)->create();
-
-        $tags = factory(Tag::class, 5)->create();
-
-        $posts = factory(Post::class, 40)->create();
-
-        $groups = factory(Group::class, 10)->create();
+        $this->call(UserTableSeeder::class);
+        $this->call(TagTableSeeder::class);
+        $this->call(GroupTypeSeeder::class);
+        $this->call(GroupRolePermissionSeeder::class);
 
         Model::reguard();
     }
+
+
 }

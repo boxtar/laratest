@@ -18,7 +18,7 @@ class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-	use Authenticatable, Authorizable, CanResetPassword;
+	use Authenticatable, Authorizable, CanResetPassword, CanHaveGroups;
 
 	/**
 	 * The database table used by the model.
@@ -112,18 +112,6 @@ class User extends Model implements AuthenticatableContract,
 	 */
 	public function posts(){
 		return $this->hasMany('App\Post', 'owner_id');
-	}
-
-	public function groups()
-	{
-		return $this->hasMany('App\Group', 'owner_id');
-	}
-
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-	public function memberships(){
-		return $this->belongsToMany('App\Group')->withPivot('permissions')->withTimestamps();
 	}
 
 	/**

@@ -14,13 +14,10 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('owner_id')->unsigned();
 			$table->string('name', 30);
 			$table->string('profile_link', 30)->unique();
-			$table->tinyInteger('type')->unsigned();
+            $table->string('avatar', 60)->default('default.jpg');
             $table->timestamps();
-
-            $table->foreign('owner_id')->references('id')->on('users');
         });
     }
 

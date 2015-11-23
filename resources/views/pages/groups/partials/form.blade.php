@@ -10,7 +10,7 @@
 
 <div class="form-group">
     {!! Form::label('type', 'Group Type: ') !!}
-    {!! Form::select('type', ['1'=>'Music', '2'=>'Dance', '3'=>'Comedy'], null, ['required', 'class'=>'form-control']) !!}
+    {!! Form::select('group_type_id', ['1'=>'Music', '2'=>'Dance', '3'=>'Comedy'], null, ['required', 'class'=>'form-control']) !!}
 </div>
 
 <div class="form-group">

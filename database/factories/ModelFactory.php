@@ -12,11 +12,13 @@
 */
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
+    $name = $faker->name;
+    $prof_link = preg_replace('/\s/', '-', $name);
     return [
-        'name' => $faker->name,
+        'name' => $name,
         'email' => $faker->email,
-        'profile_link' => str_random(16),
-        'password' => bcrypt(str_random(10)),
+        'profile_link' => $prof_link,
+        'password' => 'admin',
         'remember_token' => str_random(10),
     ];
 });
@@ -32,10 +34,9 @@ $factory->define(App\Post::class, function (Faker\Generator $faker) {
 $factory->define(App\Group::class, function (Faker\Generator $faker) {
     $user = \App\User::all()->random();
     return [
-        'owner_id' => $user->id,
         'name' => $faker->domainName,
         'profile_link' => str_random(16),
-        'type' => $faker->numberBetween(1,3)
+        'group_type_id' => $faker->numberBetween(1,3)
     ];
 });
 

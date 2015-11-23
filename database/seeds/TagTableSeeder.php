@@ -1,5 +1,6 @@
 <?php
 
+use App\Tag;
 use Illuminate\Database\Seeder;
 
 class TagTableSeeder extends Seeder
@@ -11,6 +12,21 @@ class TagTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Tag::truncate();
+
+        $tags = [
+            'Web Dev',
+            'Software Engineering',
+            'Health & Nutrition',
+            'Music',
+            'Dance',
+            'Comedy'
+        ];
+
+        foreach($tags as $tag){
+            Tag::create([
+                'name' => $tag
+            ]);
+        }
     }
 }

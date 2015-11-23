@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPermissionsToGroupUserTable extends Migration
+class CreateGroupTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,11 @@ class AddPermissionsToGroupUserTable extends Migration
      */
     public function up()
     {
-        Schema::table('group_user', function (Blueprint $table) {
-            $table->tinyInteger('permissions')->unsigned()->default(3);
+        Schema::create('group_types', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('name');
+            $table->string('label');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +27,6 @@ class AddPermissionsToGroupUserTable extends Migration
      */
     public function down()
     {
-        Schema::table('group_user', function (Blueprint $table) {
-            $table->dropColumn('permissions');
-        });
+        Schema::drop('group_types');
     }
 }

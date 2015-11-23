@@ -12,19 +12,18 @@
 
 	<hr/>
 
-	@if(Auth::id() === $group->owner->id)
+	@can('edit_details', $group)
 		<a class="btn btn-default" href="{!! action('GroupsController@edit', [$group->profile_link]) !!}">
 			Edit Group
 		</a>
-	@endif
+	@endcan
 
 	<h4>{{ $group->profile_link }}</h4>
 	<p>Created: <small>{{ $group->created_at->diffForHumans() }}</small></p>
 
 	<br/>
 
-	<h4>Owner of {!! $group->name !!}</h4>
-	<p>{!! $group->owner->name !!}</p>
+
 
 	<br/>
 
