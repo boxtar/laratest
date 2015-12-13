@@ -6,11 +6,12 @@
 });*/
 
 Route::resource('users', 'UsersController');
-Route::get('users/{users}/groups', 'GroupsController@getGroups');
+//Route::get('users/{users}/groups', 'GroupsController@getGroups');
 
 Route::resource('groups', 'GroupsController');
 //Route::get('groups/{groups}/users', 'GroupsController@getUsers');
-Route::get('groups/{groups}/add-member', 'GroupsController@addUser');
+
+Route::get('groups/{groups}/manage-members', 'GroupsController@manageMembers');
 
 Route::resource('users/{users}/posts', 'PostsController');
 

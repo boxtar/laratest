@@ -18,6 +18,18 @@
 		</a>
 	@endcan
 
+	@can('manage_media', $group)
+		<a class="btn btn-default" href="{!! action('GroupsController@edit', [$group->profile_link]) !!}">
+			Manage Media
+		</a>
+	@endcan
+
+	@can('manage_members', $group)
+		<a class="btn btn-default" href="{!! action('GroupsController@manageMembers', [$group->profile_link]) !!}">
+			Manage Members
+		</a>
+	@endcan
+
 	<h4>{{ $group->profile_link }}</h4>
 	<p>Created: <small>{{ $group->created_at->diffForHumans() }}</small></p>
 

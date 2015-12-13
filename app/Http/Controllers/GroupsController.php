@@ -16,7 +16,7 @@ class GroupsController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth', ['except' => ['index', 'show']]);
-		$this->middleware('group.permissions', ['only' => ['edit', 'update']]);
+//		$this->middleware('group.permissions', ['only' => ['edit', 'update']]);
 	}
 
     /**
@@ -61,6 +61,9 @@ class GroupsController extends Controller
 	 * @return \Illuminate\View\View
 	 */
 	public function edit($group){
+
+		$this->authorize('edit_details', $group);
+
 		return view(Config::get('boxtar.editGroup'), compact('group'));
 	}
 
@@ -71,14 +74,22 @@ class GroupsController extends Controller
 	 */
 	public function update(GroupRequest $request, $group)
 	{
-		$group->update($request);
+		$this->authorize('edit_details', $group);
+
+		$group->update($request->all());
 
 		return redirect('groups/'.$group->profile_link); //$request->input('profile_link'));
 	}
 
-	public function addUser()
+	public function manageMembers(Group $group)
 	{
-		return "working";
+		$this->authorize('manage_members', $group);
+
+		$user = \App\User::all()->random();
+
+		$user->groups()->attach($group->id, ['role_id' => 3]);
+
+		return $user->name.' added to '.$group->name;
 	}
 
 }

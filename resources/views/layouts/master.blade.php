@@ -12,25 +12,22 @@
 		</div>
 		<br/>
 		<div class = "container">
-			{{-- Section for Session Flashing --}}
-            <div class="row">
-                <div class="col-sm-offset-4 col-sm-4">
-					{{-- Laracasts Flash package --}}
-					@include('flash::message')
-				</div>
-            </div>
 
 			@yield('content')
+
 		</div>
 
         <script src="{{ URL::asset('js/script.js') }}"></script>
 
         {{-- activate bootstrap modal on any session flashed message with overlay set --}}
-        <script>
+        {{--<script>
             $('#flash-overlay-modal').modal();
-        </script>
+        </script>--}}
 
 		@yield('footer')
+
+		{{--Using SweetAlert Flash Messaging--}}
+		@include('layouts.flash')
 
 	</body>
 

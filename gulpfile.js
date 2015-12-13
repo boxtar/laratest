@@ -17,12 +17,14 @@ elixir(function(mix) {
     mix.styles([
        'libs/bootstrap.min.css',
         'libs/select2.min.css',
+        'libs/sweetalert.css',
         'app.css'
     ], 'public/css/stylesheet.css');
 
     mix.scripts([
         'libs/jquery.min.js',
         'libs/select2.min.js',
-        'libs/bootstrap.min.js'
+        'libs/bootstrap.min.js',
+        'libs/sweetalert-dev.js'
     ], 'public/js/script.js');
 });

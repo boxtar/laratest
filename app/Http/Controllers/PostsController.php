@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Flash;
 use Auth;
 use App\Post;
 use App\User;
@@ -66,7 +67,7 @@ class PostsController extends Controller
         // create the post
 		$this->create_post($request);
 
-        // laracasts flash package
+        // Store a flash notification
         flash()->success('Your post has been created', 'Post Created');
 
 		// Redirect to PostsController@index:
@@ -107,8 +108,11 @@ class PostsController extends Controller
     public function update(PostRequest $request, User $user, Post $post)
     {
         $post->update($request->all());
+
         // Using Input instead of Request due to an error when no tags selected
         $this->sync_tags($post, \Input::get('tag_list'));
+
+        flash()->success('Post Amended');
 
         return redirect('users/'.$user->profile_link.'/posts');
     }

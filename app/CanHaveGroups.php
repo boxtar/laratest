@@ -33,7 +33,10 @@ trait CanHaveGroups{
     public function hasGroupRole($role, Group $group)
     {
         if(is_string($role)){
-            return $this->groupRole($group)->name == $role;
+            if($r = $this->groupRole($group)){
+                return $r->name == $role;
+            }
+            return false;
         }
         elseif($role instanceof GroupRole){
             return false;
@@ -49,12 +52,15 @@ trait CanHaveGroups{
     }
 
     /**
+     *
      * @param $group
      * @return mixed
      */
     public function groupRole($group)
     {
-        $role = $this->groups()->findOrFail($group->id)->pivot->role_id;
-        return GroupRole::find($role);
+        if($group = $this->groups()->find($group->id)){
+            return GroupRole::find($group->pivot->role_id);
+        }
+        return false;
     }
 }
