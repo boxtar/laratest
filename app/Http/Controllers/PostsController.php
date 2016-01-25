@@ -48,7 +48,7 @@ class PostsController extends Controller
      */
     public function create($user)
     {
-         // Clean up the URL before letting Authenticated User Post
+        // Clean up the URL before letting Authenticated User Post
         if(Auth::id() != $user->id)
             return redirect('users/'.Auth::user()->profile_link.'/posts/create');
 
@@ -70,7 +70,7 @@ class PostsController extends Controller
         // Store a flash notification
         flash()->success('Your post has been created', 'Post Created');
 
-		// Redirect to PostsController@index:
+        // Redirect to PostsController@index:
 		return redirect('users/'.$user->profile_link.'/posts');
     }
 

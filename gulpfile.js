@@ -23,8 +23,12 @@ elixir(function(mix) {
 
     mix.scripts([
         'libs/jquery.min.js',
-        'libs/select2.min.js',
         'libs/bootstrap.min.js',
-        'libs/sweetalert-dev.js'
+        'libs/typeahead.min.js',
+        'libs/algoliasearch.min.js',
+        'libs/vue.min.js',
+        'libs/select2.min.js',
+        'libs/sweetalert-dev.js',
+        'app.js'
     ], 'public/js/script.js');
 });

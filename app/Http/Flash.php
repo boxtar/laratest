@@ -21,12 +21,20 @@ class Flash{
         ]);
     }
 
+    public function info($message, $title=null){
+        $this->message($message, $title, 'info');
+    }
+
     public function success($message, $title=null){
         $this->message($message, $title, 'success');
     }
 
     public function error($message, $title=null){
         $this->message($message, $title, 'error');
+    }
+
+    public function warning($message, $title=null){
+        $this->message($message, $title, 'warning');
     }
 
 }

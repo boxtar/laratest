@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Group extends Model
 {
+	use SoftDeletes;
 	/**
      * The database table used by the model.
      *
@@ -19,6 +22,12 @@ class Group extends Model
      * @var array
      */
 	protected $fillable = ['name', 'profile_link', 'avatar', 'group_type_id'];
+
+	/**
+	 * Let Model know that Soft Deleting is activated
+	 *
+	 * @var array
+	 */
 
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

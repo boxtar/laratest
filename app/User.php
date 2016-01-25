@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Traits\CanHaveGroups;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -18,7 +20,7 @@ class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-	use Authenticatable, Authorizable, CanResetPassword, CanHaveGroups;
+	use Authenticatable, Authorizable, CanResetPassword, SoftDeletes, CanHaveGroups;
 
 	/**
 	 * The database table used by the model.
@@ -40,6 +42,13 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+	/**
+	 * Let Model know that Soft Deleting is activated
+	 *
+	 * @var array
+	 */
+	protected $dates = ['deleted_at'];
 	
 	/**
 	 * Mutator for setting user name
@@ -92,21 +101,9 @@ class User extends Model implements AuthenticatableContract,
 	public function setPasswordAttribute($password){
 		$this->attributes['password'] = bcrypt($password);
 	}
-	
+
 	/**
-	 * This is an unused Scope
-	 * Not required anymore due to route model binding
-	 *
-	 * @param Illuminate\Database\Eloquent\Builder $query
-	 * @param string $user
-	 * @return Illuminate\Database\Eloquent\Builder
-	 */
-	public function scopeFindUser($query, $user){
-		return $query->whereProfileLink($user);
-	}
-										
-	/**
-	 * A user can have many articles
+	 * A user can have many posts
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */

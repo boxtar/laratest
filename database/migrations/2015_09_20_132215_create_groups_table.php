@@ -18,6 +18,7 @@ class CreateGroupsTable extends Migration
 			$table->string('profile_link', 30)->unique();
             $table->string('avatar', 60)->default('default.jpg');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

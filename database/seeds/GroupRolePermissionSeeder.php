@@ -40,6 +40,7 @@ class GroupRolePermissionSeeder extends Seeder
     private function createPermissions()
     {
         $permissions = [
+            'delete_group' => 'Delete Group',
             'manage_members'=>'Manage Group Members',
             'manage_media'=>'Manage Group Media',
             'edit_details'=>'Edit Group Details'

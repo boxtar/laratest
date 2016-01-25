@@ -2,9 +2,12 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>MVC | @yield('title')</title>
-		<link href="https://fonts.googleapis.com/css?family=Lato:100, 400" rel="stylesheet" type="text/css">
+		<title>Boxtar UK | @yield('title')</title>
+		{{--<link href="https://fonts.googleapis.com/css?family=Lato:100, 400" rel="stylesheet" type="text/css">--}}
 		<link href="{{ URL::asset('css/stylesheet.css') }}" rel="stylesheet">
+
+		@yield('stylesheets')
+
 	</head>
 	<body>
 		<div class="container-fluid">
@@ -25,6 +28,8 @@
         </script>--}}
 
 		@yield('footer')
+
+		@yield('scripts')
 
 		{{--Using SweetAlert Flash Messaging--}}
 		@include('layouts.flash')

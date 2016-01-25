@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Search;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,16 +11,22 @@ use Illuminate\Support\Facades\Mail;
 
 class PagesController extends Controller
 {
-	
+
+	/**
+	 * @return $this
+     */
 	public function getIndex(){
 	
 		return view(Config::get('boxtar.index'))->with([
 			'title' => 'Welcome',
-			'content' => 'Laravel 5 - Welcome'
+			'content' => 'BOXTAR UK'
 		]);
 		
 	}
-    
+
+	/**
+	 * @return $this
+     */
 	public function getAbout(){
 		
 		return view(Config::get('boxtar.about'))->with([
@@ -29,6 +36,9 @@ class PagesController extends Controller
 		
 	}
 
+	/**
+	 * @return $this
+     */
 	public function getContact()
 	{
 		return view(Config::get('boxtar.contact'))->with([
@@ -37,6 +47,13 @@ class PagesController extends Controller
 		]);
 	}
 
+	/**
+	 *  Temp Store method for sending mail
+	 *  Ideally move this to it's own Controller
+	 *
+	 * @param Requests\ContactFormRequest $request
+	 * @return \Illuminate\Http\RedirectResponse
+     */
 	public function store(Requests\ContactFormRequest $request)
 	{
 		Mail::send('layouts.email.contact',
@@ -48,5 +65,4 @@ class PagesController extends Controller
 		flash()->success('Your Message has been Submitted. Thanks!');
 		return redirect()->action('PagesController@getContact');
 	}
-	
 }

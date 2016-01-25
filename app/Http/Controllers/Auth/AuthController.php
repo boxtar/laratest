@@ -53,27 +53,74 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' 			=> 'required|min:5|max:30',
 			'email' 		=> 'required|email|unique:users',
-			'password'		=> 'required|min:5',
-			'profile_link'	=> 'required|unique:users|min:5|max:30'
+			'profile_link'	=> 'required|unique:users|min:5|max:30|alpha_dash',
+			'password'		=> 'required|min:5|confirmed'
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
+     * And create the Users storage space and provide default avatar
+     *
+     * JPM 24th January 2016
      *
      * @param  array  $data
      * @return User
      */
     protected function create(array $data)
     {
-        return User::create([
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
-			'profile_link' => $data['profile_link'],
+            'profile_link' => $data['profile_link'],
         ]);
+
+        $user = User::find($user->id);
+
+        $this->createUsersStorageSpace($user);
+
+        $this->redirectTo = '/users/'.$user->profile_link;
+
+        return $user;
     }
 
+    /**
+     * Creates directories and default avatar for newly registered User
+     *
+     * JPM 24th January 2016
+     *
+     * @param User $user
+     */
+    protected function createUsersStorageSpace(User $user)
+    {
+        // Get Storage Manager Instance
+        $storage = app()->make('App\Contracts\StorageManager');
+
+        // Creates the new users directory on disk and other required directories
+        $storage->createDirectories([
+            config('boxtar.userImagePath'),
+            config('boxtar.userMusicPath'),
+            config('boxtar.userVideoPath'),
+            config('boxtar.userDataPath')
+        ])->within( config('boxtar.userStoragePath') . '/' . $user->profile_link )->go();
+
+        // Copy over the default avatar image
+        $storage->copyFile(config('boxtar.defaultAvatar'), $user->avatar)
+            ->within( config('boxtar.userStoragePath') . '/' . $user->profile_link . '/' . config('boxtar.userImagePath') )
+            ->go();
+    }
+
+    /**
+     * Override the Laravel provided postLogin functionality to add
+     * the ability to let a user login using email address or profile_link
+     *
+     * JPM 24th January 2016
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function postLogin(Request $request)
     {
         // Users input (profile link or email address)
@@ -86,5 +133,32 @@ class AuthController extends Controller
         $this->username = $username;
         // Pass request off to Trait Function
         return $this->traitPostLogin($request);
+    }
+
+    /**
+     * Overwrite where the user is redirected to after successful authentication
+     *
+     * JPM 24th January 2016
+     *
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function authenticated(Request $request, User $user)
+    {
+        return redirect()->intended($this->redirectTo . '/' . $user->profile_link);
+    }
+
+    /**
+     * Get the login username to be used by the controller.
+     * Moved from AuthenticatesUser trait as I have edited this.
+     *
+     * JPM 24th January 2016
+     *
+     * @return string
+     */
+    public function loginUsername()
+    {
+        return property_exists($this, 'username') ? $this->username : 'email';
     }
 }

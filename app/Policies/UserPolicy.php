@@ -15,6 +15,18 @@ class UserPolicy
         return $authenticated_user->id === $target_user->id;
     }
 
+    /**
+     * User to check user is trying to delete their own account
+     *
+     * @param User $authenticated_user
+     * @param User $target_user
+     * @return bool
+     */
+    public function delete(User $authenticated_user, User $target_user)
+    {
+        return $authenticated_user->id === $target_user->id;
+    }
+
     /*
      * Used to display Create Post button if Authenticated User
      * is viewing their own Posts page (pages/posts/posts.blade.php)

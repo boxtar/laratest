@@ -5,24 +5,68 @@
     dd($repo->all());
 });*/
 
+// ADMIN PANEL ACTION
+/*Route::get('admin', ['middleware' => ['auth','admin'], function(){
+	return 'Admin Panel';
+}]);*/
+
+
+
+/*
+ |--------------------------------------------------
+ | User Routes
+ |--------------------------------------------------
+ */
+
 Route::resource('users', 'UsersController');
-//Route::get('users/{users}/groups', 'GroupsController@getGroups');
+
+Route::group(['prefix' => 'users/{users}'], function(){
+	Route::get('destroy', 'UsersController@destroy');
+	Route::get('groups', 'UsersController@groups');
+	Route::post('upload_image', 'UsersController@addImage');
+	Route::get('get-image/{image}', 'UsersController@getImage');
+});
+
+/*
+ |--------------------------------------------------
+ | Group Routes
+ |--------------------------------------------------
+ */
 
 Route::resource('groups', 'GroupsController');
-//Route::get('groups/{groups}/users', 'GroupsController@getUsers');
 
-Route::get('groups/{groups}/manage-members', 'GroupsController@manageMembers');
+Route::group(['prefix' => 'groups/{groups}'], function(){
+	Route::get('destroy', 'GroupsController@destroy');
+	Route::match(['get', 'post'], 'manage-members', 'GroupsController@manageMembers');
+});
+
+/*
+ |--------------------------------------------------
+ | Post Routes
+ |--------------------------------------------------
+ */
 
 Route::resource('users/{users}/posts', 'PostsController');
+
+/*
+ |--------------------------------------------------
+ | Authentication and Password Reset Routes
+ |--------------------------------------------------
+ */
 
 Route::controllers([
 	'auth'		=> 'Auth\AuthController',
 	'password'	=> 'Auth\PasswordController'
 ]);
 
-Route::get('admin', ['middleware' => ['auth','admin'], function(){
-	return 'Admin Panel';
-}]);
+/*
+ |--------------------------------------------------
+ | Searching Controllers
+ |--------------------------------------------------
+ */
+
+Route::get('search', 'SearchController@search');
+Route::get('hint-search', 'SearchController@hintSearch');
 
 /*
  |--------------------------------------------------

@@ -1,6 +1,7 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import 'pages/home';
 @import 'bootstrap_overrides';
+@import 'components/search-bar';
+@import 'pages/home';
 
 html, body {
   padding-top: 50px;
@@ -12,5 +13,5 @@ body {
   padding: 0;
   width: 100%;
   font-weight: 400;
-  font-family: 'Lato';
+  //font-family: 'Lato';
 }

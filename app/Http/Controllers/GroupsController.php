@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Group;
 use App\Repositories\Contracts\Repository;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
 use App\Http\Controllers\Controller;
@@ -13,36 +14,45 @@ use Illuminate\Support\Facades\Route;
 
 class GroupsController extends Controller
 {
+
+	/**
+	 * GroupsController constructor.
+     */
 	public function __construct()
 	{
 		$this->middleware('auth', ['except' => ['index', 'show']]);
-//		$this->middleware('group.permissions', ['only' => ['edit', 'update']]);
 	}
 
-    /**
+	/**
+	 * Returns a view that simply lists Groups
 	 *
-	 */
-    public function index(){
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+	public function index(){
 		$groups = Group::latest()->get();
 		return view(Config::get('boxtar.viewGroups'), compact('groups'));
 	}
 
 	/**
+	 * Returns a view that displays group info and media
+	 *
 	 * @param Group $group
 	 * @return \Illuminate\View\View
 	 */
-	public function show($group){
+	public function show(Group $group){
 		return view(Config::get('boxtar.viewGroup'), compact('group'));
 	}
-	
+
 	/**
-	 *
-	 */
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function create(){
 		return view(Config::get('boxtar.createGroup'));
 	}
 
 	/**
+	 * Creates Group and assigns Authenticated User the Administrator Role
+	 *
 	 * @param GroupRequest $request
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
@@ -50,13 +60,16 @@ class GroupsController extends Controller
 
 		$group = $request->user()->createGroup($request);
 
-		flash()->success('New Group '.$group->name.' created!');
+		flash()->success($group->name.' successfully created','Its Time To Be Discovered!');
 
 		return redirect('groups/'.$request->input('profile_link'));
 		
 	}
 
 	/**
+	 * Returns a view that allows the Group to be edited
+	 * only if the Authenticated User is authorised
+	 *
 	 * @param $group
 	 * @return \Illuminate\View\View
 	 */
@@ -68,28 +81,74 @@ class GroupsController extends Controller
 	}
 
 	/**
+	 * Updates Group details if the Authenticated User is authorised
+	 *
 	 * @param GroupRequest $request
-	 * @param $group
+	 * @param Group $group
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
-	public function update(GroupRequest $request, $group)
+	public function update(GroupRequest $request, Group $group)
 	{
 		$this->authorize('edit_details', $group);
 
 		$group->update($request->all());
 
+		flash()->success('Group details updated', 'Awesome!');
+
 		return redirect('groups/'.$group->profile_link); //$request->input('profile_link'));
 	}
 
-	public function manageMembers(Group $group)
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param Group $group
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy(Group $group)
+	{
+		$this->authorize('delete_group', $group);
+
+		$group->delete();
+
+		flash()->success('You can always reactivate if you wish', $group->name.' has left the building :(');
+
+		return redirect('users/'.Auth::user()->profile_link);
+	}
+
+	/**
+	 * For Testing Management of Group Members
+	 *
+	 * @param Group $group
+	 * @return string
+     */
+	public function manageMembers(Request $request, Group $group)
 	{
 		$this->authorize('manage_members', $group);
 
-		$user = \App\User::all()->random();
+		if(strtolower($request->method()) == 'post'){
 
-		$user->groups()->attach($group->id, ['role_id' => 3]);
+			// Find User
+			if(! $user = User::whereProfileLink($request->q)->first() ){
+				flash()->error('User not found', 'Could Not Invite User');
+				return view(config('boxtar.manageMembers'), compact('group'))->with('members', $group->members->except(Auth::id()));
+			}
 
-		return $user->name.' added to '.$group->name;
+			// Make sure user isn't already a member of group
+			if( $user->groups->has($group->id) ){
+				flash()->error($user->name . ' is already a member', 'Could Not Invite User');
+				return view(config('boxtar.manageMembers'), compact('group'))->with('members', $group->members->except(Auth::id()));
+			}
+
+			// Send invitation (temp: add user)
+			$user->groups()->attach($group->id, ['role_id' => 3]);
+
+			flash()->success($user->name . ' invited to ' . $group->name, 'Nice!');
+
+		}
+
+		$members = $group->members->except(Auth::id());
+
+		return view(config('boxtar.manageMembers'), compact('group', 'members'));
+
 	}
-
 }

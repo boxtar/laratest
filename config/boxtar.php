@@ -12,16 +12,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Group Permission Constants
-    |--------------------------------------------------------------------------
-    */
-
-    'groupOwner'        => 1,
-    'groupAdmin'        => 2,
-    'groupMember'       => 3,
-
-    /*
-    |--------------------------------------------------------------------------
     | Group Type Constants
     |--------------------------------------------------------------------------
     */
@@ -29,6 +19,26 @@ return [
     'musicGroup'        => 1,
     'danceGroup'        => 2,
     'comedyGroup'       => 3,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Storage Paths
+     |--------------------------------------------------------------------------
+     */
+
+    'userStoragePath'  => 'users',
+    'userImagePath'    => 'images',
+    'userMusicPath'    => 'music',
+    'userVideoPath'    => 'videos',
+    'userDataPath'     => 'data',
+
+    'groupStoragePath' => 'groups',
+    'groupImagePath'   => 'images',
+    'groupMusicPath'   => 'music',
+    'groupVideoPath'   => 'videos',
+    'groupDataPath'    => 'data',
+
+    'defaultAvatar'    => 'images/default.jpg',
 
     /*
      |--------------------------------------------------------------------------
@@ -59,6 +69,7 @@ return [
     'viewUsers'         => 'pages.users.users',
     'viewUser'          => 'pages.users.user',
     'editUser'          => 'pages.users.edit',
+    'viewUsersGroups'   => 'pages.users.groups',
 
     /*
      |--------------------------------------------------------------------------
@@ -70,6 +81,7 @@ return [
     'viewGroups'         => 'pages.groups.groups',
     'viewGroup'          => 'pages.groups.group',
     'editGroup'          => 'pages.groups.edit',
+    'manageMembers'      => 'pages.groups.manage-members',
 
     /*
      |--------------------------------------------------------------------------

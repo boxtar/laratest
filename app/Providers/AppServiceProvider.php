@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Contracts\Search;
+use App\Contracts\StorageManager;
+use App\Services\AlgoliaSearch;
+use App\Services\EloquentSearch;
+use App\Services\LaravelStorageManager;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +28,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(Search::class, function(){
+            return new EloquentSearch();
+        });
+
+        $this->app->singleton(StorageManager::class, function(){
+           return new LaravelStorageManager(
+               $this->app->make('filesystem')
+           );
+        });
     }
 }
