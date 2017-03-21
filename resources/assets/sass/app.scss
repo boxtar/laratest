@@ -1,9 +1,11 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import 'bootstrap_overrides';
+@import 'components/bootstrap_overrides';
 @import 'components/search-bar';
 @import 'pages/home';
+@import 'components/gallery';
 
 html, body {
+
   padding-top: 50px;
   height: 100%;
 }

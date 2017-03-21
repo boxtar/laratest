@@ -20,6 +20,11 @@ return [
     'danceGroup'        => 2,
     'comedyGroup'       => 3,
 
+
+    'usersPrefix'      => 'users',
+    'groupsPrefix'     => 'groups',
+
+
     /*
      |--------------------------------------------------------------------------
      | Storage Paths
@@ -39,6 +44,8 @@ return [
     'groupDataPath'    => 'data',
 
     'defaultAvatar'    => 'images/default.jpg',
+    'thumbnailPrefix'  => 'tn-',
+    'fileNotFound'     => 'default.jpg',
 
     /*
      |--------------------------------------------------------------------------

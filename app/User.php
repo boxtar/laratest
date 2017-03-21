@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Traits\CanHaveGroups;
+use App\Traits\CanHaveImages;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -20,7 +21,7 @@ class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-	use Authenticatable, Authorizable, CanResetPassword, SoftDeletes, CanHaveGroups;
+	use Authenticatable, Authorizable, CanResetPassword, SoftDeletes, CanHaveGroups, CanHaveImages;
 
 	/**
 	 * The database table used by the model.
@@ -49,6 +50,7 @@ class User extends Model implements AuthenticatableContract,
 	 * @var array
 	 */
 	protected $dates = ['deleted_at'];
+
 	
 	/**
 	 * Mutator for setting user name
@@ -110,6 +112,14 @@ class User extends Model implements AuthenticatableContract,
 	public function posts(){
 		return $this->hasMany('App\Post', 'owner_id');
 	}
+
+	/*
+	 * User storage paths for media storage
+	 */
+	public function storagePath() 	{ return userStoragePath($this); }
+	public function imagePath() 	{ return userImagePath($this); }
+	public function musicPath() 	{ return userMusicPath($this); }
+	public function videoPath() 	{ return userVideoPath($this); }
 
 	/**
 	 * @return bool

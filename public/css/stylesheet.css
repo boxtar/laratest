@@ -10323,6 +10323,16 @@ em {
   padding: 10px 5px;
 }
 
+.gallery .gallery__image {
+  position: relative;
+  padding: 15px;
+}
+
+.gallery .gallery__image img {
+  width: 100%;
+  height: auto;
+}
+
 html,
 body {
   padding-top: 50px;

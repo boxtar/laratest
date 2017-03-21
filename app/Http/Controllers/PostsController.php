@@ -71,7 +71,7 @@ class PostsController extends Controller
         flash()->success('Your post has been created', 'Post Created');
 
         // Redirect to PostsController@index:
-		return redirect('users/'.$user->profile_link.'/posts');
+		return redirect()->route('posts.index', [$user->profile_link]);
     }
 
     /**
@@ -149,18 +149,5 @@ class PostsController extends Controller
      */
     private function sync_tags(Post $post, $tags){
         $post->tags()->sync((array) $tags);
-    }
-
-    /**
-     * check if the requesting user is also the owner of the post
-     *
-     * @param User $user
-     * @return bool
-     */
-    private function is_user_owner(User $user){
-        if(! $auth_user = Auth::user())
-            return false;
-
-        return $user->id == $auth_user->id;
     }
 }

@@ -12,7 +12,7 @@
 		
 		@include('errors.list')
 		
-		{!! Form::open(['action' => ['PostsController@store', 'id' => $user->profile_link]]) !!}
+		{!! Form::open(['method'=>'PUT', 'route' => ['posts.store', 'id' => $user->profile_link]]) !!}
 
 			@include('pages.posts.partials.form', ['submitButtonText' => 'Create Post'])
 

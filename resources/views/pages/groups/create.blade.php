@@ -10,7 +10,7 @@
 
         @include('errors.list')
 
-        {!! Form::open(['action' => 'GroupsController@store']) !!}
+        {!! Form::open(['method'=>'PUT', 'action' => 'GroupsController@store']) !!}
 
             @include('pages.groups.partials.form', ['submitButtonText' => 'Create Group'])
 

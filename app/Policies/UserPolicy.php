@@ -35,4 +35,18 @@ class UserPolicy
     {
         return $authenticated_user->id === $target_user->id;
     }
+
+
+    /**
+     * Used to determine if authenticated user can manage media for a given user
+     * A user can only manage their own media
+     *
+     * @param User $authenticated_user
+     * @param User $target_user
+     * @return bool
+     */
+    public function manage_media(User $authenticated_user, User $target_user)
+    {
+        return $authenticated_user->id === $target_user->id;
+    }
 }

@@ -95,7 +95,7 @@ class GroupsController extends Controller
 
 		flash()->success('Group details updated', 'Awesome!');
 
-		return redirect('groups/'.$group->profile_link); //$request->input('profile_link'));
+		return redirect(groupProfileLink($group)); //$request->input('profile_link'));
 	}
 
 	/**
@@ -112,7 +112,7 @@ class GroupsController extends Controller
 
 		flash()->success('You can always reactivate if you wish', $group->name.' has left the building :(');
 
-		return redirect('users/'.Auth::user()->profile_link);
+		return redirect( userProfileLink( Auth::user() ) );
 	}
 
 	/**

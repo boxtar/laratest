@@ -2,34 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\StorageManager;
 use Auth;
+use Image;
 use App\User;
-use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Contracts\StorageManager;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Config;
-use Image;
 
 class UsersController extends Controller
 {
 	/**
 	 * Display all users sorted by newest first
-	 * @return Illuminate\View;
+	 *
+	 * @return \Illuminate\View\View
 	 */
     public function index(){
 		return view(Config::get('boxtar.viewUsers'))->with('users', User::latest()->get());
 	}
 
 	/**
+	 * Display a given user's profile
+	 *
 	 * @param $user
 	 * @return \Illuminate\View\View
 	 */
-	public function show(User $user){
-		return view(Config::get('boxtar.viewUser'), compact('user'));
+	public function show(User $user, StorageManager $storage){
+
+		$images = $user->getImages($storage);
+
+		return view(Config::get('boxtar.viewUser'), compact('user', 'images'));
 	}
 
+	/**
+	 * Return a list of a given user's Groups
+	 *
+	 * @param User $user
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function groups(User $user)
 	{
 		$groups = $user->groups;
@@ -64,6 +76,8 @@ class UsersController extends Controller
 	}
 
 	/**
+	 * Edit User account details
+	 *
 	 * @param UserRequest $request
 	 * @param $user
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -74,12 +88,21 @@ class UsersController extends Controller
 
 		$user->update($request->all());
 
+		// Also need to rename the users directory
+
 		flash()->success('Profile Updated');
 
-		return redirect('users/'.$request->input('profile_link'));
+		return redirect(userProfileLink($user));
 
 	}
 
+	/**
+	 * Soft delete User account
+	 *
+	 * @param User $user
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @throws \Exception
+     */
 	public function destroy(User $user)
 	{
 		$this->authorize('delete', $user);
@@ -93,39 +116,4 @@ class UsersController extends Controller
 		return redirect('/');
 	}
 
-	public function addImage(User $user, Request $request)
-	{
-		// Authorize the ability to add an image
-		$this->authorize('edit', $user);
-
-		// get the UploadedFile instance
-		$file = $request->file('image');
-
-		// generate a unique file name by using the time function
-		$name = time() . $file->getClientOriginalName();
-
-		Image::make($file)->save(storage_path('app/'.$name));
-
-		// Move from tmp storage to permanent storage
-//		$file->move('img/' . $user->profile_link, $name);
-
-		return 'image uploaded';
-	}
-
-	public function getImage(User $user, $imageName, StorageManager $storage)
-	{
-		// Use Intervention to make the image from file
-		$img = Image::make( $storage->getFile(
-				config('boxtar.userStoragePath') . '/' .
-				$user->profile_link . '/' .
-				config('boxtar.userImagePath') . '/' .
-				$imageName
-			)
-		);
-
-		// HARD CODED TO .JPG - TEMP
-		// Intervention provides all the required data for returning an image response
-		return $img->response('jpg');
-
-	}
 }

@@ -13,7 +13,7 @@ class UserRequest extends Request
      */
     public function authorize()
     {
-        return (\Auth::id() === $this->route('users')->id);
+        return (\Auth::id() === $this->route('user')->id);
     }
 
     /**
@@ -25,9 +25,9 @@ class UserRequest extends Request
     {
         return $rules = [
             'name' 			=> 'required|min:5|max:30',
-			'email' 		=> 'required|email|unique:users,email,'.$this->route('users')->id,
-			'password'		=> 'required|min:5',
-			'profile_link'	=> 'required|unique:users,profile_link,'.$this->route('users')->id.'|min:5|max:30'
+			'email' 		=> 'required|email|unique:users,email,'.$this->route('user')->id,
+			'password'		=> 'required|min:5|confirmed',
+			'profile_link'	=> 'required|unique:users,profile_link,'.$this->route('user')->id.'|min:5|max:30'
         ];
     }
 }

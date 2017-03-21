@@ -5,17 +5,18 @@
 @stop
 
 @section('stylesheets')
-	<link rel="stylesheet" href="{{ url() }}/css/libs/dropzone.min.css">
+	<link rel="stylesheet" href="{{ url()->asset('css/libs/dropzone.min.css') }}">
 @endsection
 
 @section('content')
 <div class="content">
-	<div class="col md-12 text-center">
-		<img src="{{ url( 'users/' . $user->profile_link . '/get-image/' . $user->avatar ) }}" alt="avatar">
+	<div class="col-md-12">
+		<img src="{{ route('users.getImage', [$user->profile_link, $user->avatar]) }}" alt="avatar">
 	</div>
-	<div class = "title">{{ $user->name }}</div>
-	<hr/>
-	<h4>{{ $user->email }}</h4>
+	<div class = "">
+		<h1>{{ $user->name }}</h1>
+	</div>
+	<h5>Email: {{ $user->email }}</h5>
 	<p>Created: <small>{{ $user->created_at->diffForHumans() }}</small></p>
 	<br/>
 	<h5>
@@ -23,30 +24,61 @@
 			{{ $user->name }}'s Posts
 		</a>
 
-		<a class="btn btn-default" href="{!! action('UsersController@groups', [$user->profile_link]) !!}">
+		<a class="btn btn-default" href="{!! route('users.groups', [$user->profile_link]) !!}">
 			{{ $user->name }}'s Groups
 		</a>
 
 		@if($user->id === Auth::id())
-			<a class="btn btn-default" href="{!! action('UsersController@edit', [$user->profile_link]) !!}">
+			<a class="btn btn-default" href="{!! route('users.edit', [$user->profile_link]) !!}">
 				Edit Profile
 			</a>
 		@endif
 	</h5>
 
 
+	@unless(empty($images))
+		<div class="container gallery">
+			<div class="row">
+				@foreach($images as $image)
 
-	@can('edit', $user)
+					<div class="col-md-3 gallery__image">
+
+						@can('manage_media', $user)
+						<form action="{{route('users.destroyImage', [$user->profile_link, $image])}}" method="post">
+							<input type="submit" value="Delete">
+							<input type="hidden" name="_method" value="DELETE">
+							{{ csrf_field() }}
+						</form>
+						@endcan
+						
+						@can('manage_media', $user)
+						<a href="/testing/{{ $image }}">
+						@endcan
+							<img src="{{ route('users.getImage', [$user->profile_link, $image]) }}" alt="image">
+						@can('manage_media', $user)
+						</a>
+						@endcan
+
+					</div>
+
+				@endforeach
+			</div>
+		</div>
+
+	@endunless
+
+
+	@can('manage_media', $user)
 
 		<div class="small-container">
 			<h3 class="text-center">Add Some Graphix</h3>
 
-			<form action="{{action('UsersController@addImage', ['users' => $user->profile_link])}}"
+			<form action="{{ route('users.storeImage', $user->profile_link) }}"
 				  class="dropzone"
-				  id="addImagesForm"
-			>
+				  id="addImagesForm">
 
 				{{ csrf_field() }}
+				<input type="hidden" name="_method" value="PUT">
 
 			</form>
 		</div>
@@ -57,7 +89,7 @@
 @stop
 
 @section('scripts')
-	<script src="{{ url() }}/js/libs/dropzone.min.js"></script>
+	<script src="{{ url()->asset('js/libs/dropzone.min.js') }}"></script>
 	<script>
 		Dropzone.options.addImagesForm = {
 			paramName: 'image',

@@ -27,17 +27,17 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot($router);
 
         // User route model bind:
-        $router->bind('users', function($username){
+        $router->bind('user', function($username){
             return \App\User::where('profile_link', $username)->firstOrFail();
         });
 
         // Groups route model bind:
-        $router->bind('groups', function($group_name){
+        $router->bind('group', function($group_name){
             return \App\Group::where('profile_link', $group_name)->firstOrFail();
         });
 
         // Posts route model bind:
-        $router->model('posts', 'App\Post');
+        $router->model('post', 'App\Post');
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use Illuminate\Http\Request;
 use Validator;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -28,7 +28,7 @@ class AuthController extends Controller
     use ThrottlesLogins;
 
 	// redirect path post registration
-	protected $redirectTo = '/users';
+	protected $redirectTo;
 
     // name of email/username input field in login form
     protected $username = 'login_name';
@@ -40,6 +40,8 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'getLogout']);
+
+        $this->redirectTo = '/' . config('boxtar.usersPrefix');
     }
 
     /**
@@ -98,18 +100,18 @@ class AuthController extends Controller
         // Get Storage Manager Instance
         $storage = app()->make('App\Contracts\StorageManager');
 
-        // Creates the new users directory on disk and other required directories
-        $storage->createDirectories([
-            config('boxtar.userImagePath'),
-            config('boxtar.userMusicPath'),
-            config('boxtar.userVideoPath'),
-            config('boxtar.userDataPath')
-        ])->within( config('boxtar.userStoragePath') . '/' . $user->profile_link )->go();
+        // Creates the new users directories on disk and copies over default files
+        $storage->cd( config('boxtar.userStoragePath'))
+            ->createDirectory($user->profile_link)->cd($user->profile_link)
+            ->createDirectories([
+                    config('boxtar.userImagePath'),
+                    config('boxtar.userMusicPath'),
+                    config('boxtar.userVideoPath'),
+                    config('boxtar.userDataPath')
+                ])
+            ->cd( config('boxtar.userImagePath') )
+            ->copyFile( config('boxtar.defaultAvatar'), $user->avatar );
 
-        // Copy over the default avatar image
-        $storage->copyFile(config('boxtar.defaultAvatar'), $user->avatar)
-            ->within( config('boxtar.userStoragePath') . '/' . $user->profile_link . '/' . config('boxtar.userImagePath') )
-            ->go();
     }
 
     /**
@@ -147,18 +149,5 @@ class AuthController extends Controller
     public function authenticated(Request $request, User $user)
     {
         return redirect()->intended($this->redirectTo . '/' . $user->profile_link);
-    }
-
-    /**
-     * Get the login username to be used by the controller.
-     * Moved from AuthenticatesUser trait as I have edited this.
-     *
-     * JPM 24th January 2016
-     *
-     * @return string
-     */
-    public function loginUsername()
-    {
-        return property_exists($this, 'username') ? $this->username : 'email';
     }
 }

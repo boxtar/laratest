@@ -14,10 +14,10 @@ class PostRequest extends Request
     public function authorize()
     {
         // User Model:
-        $user = $this->route('users');
+        $user = $this->route('user');
 
         // Post Model:
-        $post = $this->route('posts');
+        $post = $this->route('post');
 
         // Ensure Authenticated User is trying to create/edit their own post
         if($user->id === \Auth::id())

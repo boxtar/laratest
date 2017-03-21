@@ -31,7 +31,7 @@ class GroupRequest extends Request
 
         if($this->isMethod('patch'))
         {
-            $rules['profile_link'] = 'required|unique:groups,profile_link,'.$this->route('groups')->id.'|min:4|max:30';
+            $rules['profile_link'] = 'required|unique:groups,profile_link,'.$this->route('group')->id.'|min:4|max:30';
         }
 
         return $rules;
