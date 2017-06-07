@@ -1,0 +1,3 @@
+1. Block Comment out the loop that registers gates in the AuthServiceProvider.
+2. run art migrate --seed
+3. Remove Block Comment from step 1.

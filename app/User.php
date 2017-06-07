@@ -51,41 +51,33 @@ class User extends Model implements AuthenticatableContract,
 	 */
 	protected $dates = ['deleted_at'];
 
-	
+
 	/**
 	 * Mutator for setting user name
 	 *
 	 * @param string $name
-	 */									
+	 */
 	public function setNameAttribute($name){
-		
-		$bits = explode(' ', $name);
-		
-		foreach($bits as $k => $v)
-			$bits[$k] = strtolower($v);
-		
-		$name = implode(' ', $bits);
-		
-		$this->attributes['name'] = $name;
+		$this->attributes['name'] = strtolower($name);
 	}
-										
+
 	/**
 	 * Accessor for retrieving user name
 	 *
 	 * @param string $name
 	 * @return string
-	 */									
+	 */
 	public function getNameAttribute($name){
-		
+
 		$bits = explode(' ', $name);
-		
+
 		foreach($bits as $k => $v)
 			$bits[$k] = ucfirst($v);
-		
+
 		return $name = implode(' ', $bits);
-		
+
 	}
-	
+
     /**
 	 * Mutates changes to profile_link attribute
 	 *
